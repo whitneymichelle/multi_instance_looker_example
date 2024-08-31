@@ -1,0 +1,14 @@
+# looker_prod.yml
+lookml:
+  base_url: "https://prod.looker.com"   # The base URL of the Looker instance
+  client_id: "YOUR_CLIENT_ID_FOR_PROD" # Looker API client ID for this instance
+  client_secret: "YOUR_CLIENT_SECRET_FOR_PROD" # Looker API client secret for this instance
+
+# Additional configurations specific to this instance
+project:
+  name: "lookml_project_name"  # Name of the LookML project
+  branch: "main"  # Default branch for this project
+
+# Optional: configuration for specific features or integrations
+features:
+  feature_flag: true  # Example feature flag for enabling/disabling specific features

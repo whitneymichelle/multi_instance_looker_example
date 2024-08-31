@@ -1,0 +1,108 @@
+stages:
+  - sync
+  - validate
+  - deploy
+  - approve
+
+variables:
+  NODE_VERSION: "16"  # Adjust Node.js version as needed
+
+before_script:
+  - npm install
+
+# Sync Looker models for Dev
+sync_dev:
+  stage: sync
+  script:
+    - echo "Syncing Looker models for Dev..."
+    - npx gazer sync --instance dev
+
+# Validate Looker models for Dev
+validate_dev:
+  stage: validate
+  script:
+    - echo "Validating Looker models for Dev..."
+    - npx gazer validate --instance dev
+  needs:
+    - sync_dev
+
+# Deploy Looker models to Dev
+deploy_dev:
+  stage: deploy
+  script:
+    - echo "Deploying to Looker Dev..."
+    - npx looker-deploy deploy --instance dev
+  needs:
+    - validate_dev
+
+# Manual approval to proceed to Stage
+approve_dev_to_stage:
+  stage: approve
+  script:
+    - echo "Waiting for manual approval to proceed to Stage..."
+  when: manual
+  needs:
+    - deploy_dev
+
+# Sync Looker models for Stage
+sync_stage:
+  stage: sync
+  script:
+    - echo "Syncing Looker models for Stage..."
+    - npx gazer sync --instance stage
+  needs:
+    - approve_dev_to_stage
+
+# Validate Looker models for Stage
+validate_stage:
+  stage: validate
+  script:
+    - echo "Validating Looker models for Stage..."
+    - npx gazer validate --instance stage
+  needs:
+    - sync_stage
+
+# Deploy Looker models to Stage
+deploy_stage:
+  stage: deploy
+  script:
+    - echo "Deploying to Looker Stage..."
+    - npx looker-deploy deploy --instance stage
+  needs:
+    - validate_stage
+
+# Manual approval to proceed to Prod
+approve_stage_to_prod:
+  stage: approve
+  script:
+    - echo "Waiting for manual approval to proceed to Prod..."
+  when: manual
+  needs:
+    - deploy_stage
+
+# Sync Looker models for Prod
+sync_prod:
+  stage: sync
+  script:
+    - echo "Syncing Looker models for Prod..."
+    - npx gazer sync --instance prod
+  needs:
+    - approve_stage_to_prod
+
+# Validate Looker models for Prod
+validate_prod:
+  stage: validate
+  script:
+    - echo "Validating Looker models for Prod..."
+    - npx gazer validate --instance prod
+  needs:
+    - sync_prod
+
+# Deploy Looker models to Prod
+deploy_prod:
+  stage: deploy
+  script:
+    - echo "Deploying to Looker Prod..."
+    - npx looker-deploy deploy --instance prod
+  needs:
+    - validate_prod

@@ -1,0 +1,14 @@
+{
+    "name": "lookml-project",
+    "version": "1.0.0",
+    "scripts": {
+      "sync": "gazer sync",
+      "validate": "gazer validate",
+      "deploy": "looker-deploy deploy"
+    },
+    "dependencies": {
+      "gazer": "^1.0.0",  // Replace with actual version
+      "looker-deploy": "^1.0.0"  // Replace with actual version
+    }
+  }
+  
